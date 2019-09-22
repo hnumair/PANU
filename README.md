@@ -1,3 +1,2 @@
 # PANU
-Smart Parking Assistance
-Testing
+Smart Parking Assistance System
