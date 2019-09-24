@@ -1,5 +1,5 @@
 <?php
-  
+  error_reporting(E_ALL & ~E_NOTICE);
   require 'conn.php';
 
   // $email = "";
@@ -110,7 +110,7 @@
                     <span class="input-group-text bg-transparent border-right-0">
                   <i class="ti-user text-primary"></i>
                     </span>
-                  <input type="text" class="form-control form-control-lg border-left-0" id="name" name="name" placeholder="Name">
+                  <input type="text" class="form-control form-control-lg border-left-0" id="name" name="name" placeholder="Name" value="<?php echo $_POST['name']; ?>">
                     </div>
                   </div>
                 </div>
@@ -120,7 +120,7 @@
                     <span class="input-group-text bg-transparent border-right-0">
                   <i class="ti-email text-primary"></i>
                     </span>
-                  <input type="email" class="form-control form-control-lg border-left-0" id="email" name="email" placeholder="Email">
+                  <input type="email" class="form-control form-control-lg border-left-0" id="email" name="email" placeholder="Email" value="<?php echo $_POST['email']; ?>" >
                     </div>
                   </div>
                 </div>
@@ -140,7 +140,7 @@
                     <span class="input-group-text bg-transparent border-right-0">
                   <i class="ti-mobile text-primary"></i>
                     </span>
-                  <input type="text" class="form-control form-control-lg border-left-0" id="phone" name="phone" placeholder="Contact No">
+                  <input type="text" class="form-control form-control-lg border-left-0" id="phone" name="phone" placeholder="Contact No" value="<?php echo $_POST['phone']; ?>" maxlength="10" >
                   
                     </div>
                   </div>
