@@ -1,5 +1,5 @@
 <?php
-  
+  // session_start();
   require 'conn.php';
 
   @$email = "";
@@ -13,17 +13,21 @@
         
         $email = trim($_POST['email']);
         $password = $_POST['password'];
-        $query = "SELECT email, password FROM user where email = ? AND password = ?";
+        $query = "SELECT userId, email, password FROM user where email = ? AND password = ?";
         $stmt = $conn->prepare($query);
         $stmt->bind_param("ss",$email,$password);
         $stmt->execute();
-        $stmt->store_result();
-        if($stmt->num_rows === 0){
+        // $stmt->store_result();
+        $res1 = $stmt->get_result();
+        $row = $res1->fetch_assoc();
+        if($res1->num_rows === 0){
           $result = "<div class='form-group'>
                   <h6 class='font-weight-light' style='color : red'>Incorrect email or password</h6>
                 </div>";
         }
         else{
+            $_SESSION['uid'] = $row['userId'];
+            // die("HI");
             header("location: index.php");
         }
 }

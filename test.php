@@ -1,53 +1,186 @@
-<?php?>
-<!DOCTYPE html>
-<html lang="en">
+<?php
 
+require 'conn.php';
+
+$query = "select * from slots";
+$stmt = $conn->prepare($query);
+$stmt->execute();
+$stmt->store_result();
+$result = $stmt->num_rows;
+$stmt->bind_result($sid, $vacant);
+
+
+// echo $result;
+
+?>
+
+<!DOCTYPE html>
+<html>
 <head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Register</title>
-  <!-- plugins:css -->
-  <link rel="stylesheet" href="vendors/ti-icons/css/themify-icons.css">
-  <link rel="stylesheet" href="vendors/base/vendor.bundle.base.css">
-  <!-- endinject -->
-  <!-- plugin css for this page -->
-  <!-- End plugin css for this page -->
-  <!-- inject:css -->
-  <link rel="stylesheet" href="css/style.css">
-  <!-- endinject -->
-  <link rel="shortcut icon" href="images/favicon.png" />
+  <script type="text/javascript">
+    var count = 0;
+    var butt2;
+    function setColor(mybtn) {
+        // var butt = document.getElementById('mybtn');
+        // alert(mybtn);
+        butt2 = mybtn;
+        var butt = document.getElementById(mybtn);
+        // alert(window.getComputedStyle(butt, null));
+
+        if (butt.style.color == "rgb(52, 73, 94)") {
+            
+            butt.style.color = "#C06C84";
+            butt.style.backgroundColor = "#ffffff00";
+            butt.style.borderColor = "#C06C84";
+            count--;        
+        }
+        else if(butt.style.color == "rgb(192, 108, 132)"){
+        // alert(butt);  
+        // alert(butt.style.color);
+            count++;
+
+            butt.setAttribute("hidden", "true");
+            butt.style.color = "#34495e";
+            butt.style.borderColor = "#34495e";
+            butt.style.backgroundColor = "#34495e";
+            butt.style.boxShadow = "0px 0px 10px #34495e";
+
+        }
+        // alert(count);
+        if(count>1){
+          document.getElementById('sbtn').disabled = true;
+        }
+        else{
+          document.getElementById('sbtn').disabled = false;
+        }
+        document.getElementById('txt').innerHTML = butt2;
+    }
+
+    // function sendid(){
+    //     // alert(butt2);
+    //     window.location.href = "login.php?id="+butt2;
+
+    // }
+
+  </script>
+  <?php
+    if(isset($_POST['sbtn'])){
+      if(isset($_POST['btn0'])){
+        echo "HI";
+
+      }
+    // echo "<script>document.writeln(butt2)</script>";
+  }
+                    ?>
+  <style type="text/css">
+    :root{
+      --color:#C06C84;
+    }
+
+    .btn {
+  display: inline-flex;
+  align-items: center;
+  background: transparent;
+  border: 4px solid;
+  /*border-color: #C06C84;*/
+  box-shadow: 0 3px 2px 0 rgba(0,0,0,0.1);
+  border-radius: 5px;
+  height: 45px;
+  padding: 0 30px;
+  color: #fff;
+  font-family: Lato, Arial, sans-serif;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: background .3s, transform .3s, box-shadow .3s;
+   will-change: transform;
+   transition: all 0.3s ease-in-out;
+   -webkit-transition: all 0.3s ease-in-out;
+   -o-transition: all 0.3s ease-in-out;
+}  
+  .btn:hover {
+    /*background: darken(#C06C84,10%);*/
+    box-shadow: 0px 0px 10px var(--color);
+    transform: translate3d(0, -2px, 0);
+  }
+  .btn:active {
+    box-shadow: 0 1px 1px 0 rgba(0,0,0,0.1);
+    transform: translate3d(0, 1px, 0);
+  }
+
+
+.pulse {
+  position: relative;
+  
+  &:before, &:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255,255,255,.4);
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    opacity: 0;
+    margin: auto;
+  }
+
+  &:hover:before, &:hover:after {
+    display: none;
+  }
+}
+
+
+body {
+  /*display:flex;*/
+  /*align-items: center;*/
+  /*justify-content: center;*/
+  background: #272822;
+}
+</style>
+  <title></title>
 </head>
 <body>
-	  <div class="container-scroller">
-    <div class="container-fluid page-body-wrapper full-page-wrapper">
-      <div class="content-wrapper d-flex align-items-center auth px-0">
-        <div class="row w-100 mx-0">
-          <div class="col-lg-4 mx-auto">
-            <div class="auth-form-light text-left py-5 px-4 px-sm-5">
-              <div class="brand-logo">
-                <!-- <img src="../../images/logo.svg" alt="logo"> -->
-                <h2>P.A.N.U.</h2>
-              </div>
-              <h4>New here?</h4>
-              <h6 class="font-weight-light">Signing up is easy. It only takes a few steps</h6>
-              <form class="pt-3" method="post">
-                <div class="form-group">
-                  <div class="input-group">
-                    <div class="input-group-prepend bg-transparent">
-                    <span class="input-group-text bg-transparent border-right-0">
-                  <i class="ti-user text-primary"></i>
-                    </span>
-                  <input type="text" class="form-control form-control-lg border-left-0" id="name" name="name" placeholder="Name">
-                    </div>
-                  </div>
-                </div>
+  <div id="container">
+  <!-- <button id = "btn" class="btn" onclick="setColor()"></button> -->
+                  <!-- <div> -->
+                    <form method="post" id="xx">
+                      <p id = "txt" name="butt" hiddden = "true"></p>
+                    <!-- <button id = "mybtn" class="btn" onclick="setColor()"></button> --> 
+                 <script type="text/javascript">
+                  var n = <?php echo $result; ?>;
+                  var z = document.getElementById(container);
+                  // alert();
+                  <?php
+                    while($stmt->fetch()){
 
-<div class='form-group'>
-                    <h6 class='font-weight-light' style='color : red'>This email is already registered</h6>
-                  </div><br>
-                  <div class='form-group'>
-                    <h6 class='font-weight-light' style='color : red'>This email is already registered</h6>
-                  </div><br>
+
+                  ?>
+                  
+                    var vac = <?php echo $vacant; ?>;
+                    var i = <?php echo $sid; ?>;
+                    var mybtn = document.createElement("BUTTON");
+                    mybtn.setAttribute("id","btn"+i);
+                    mybtn.setAttribute("name","btn"+i);
+                    mybtn.setAttribute("class","btn");
+                    mybtn.setAttribute("onclick","setColor(id)");
+                    if(vac == 1){
+                      mybtn.style.color = "#C06C84";
+
+                    }else{
+                      mybtn.style.color = "#34495e";                      
+                    }
+                    // ("borderColor","red");
+                    document.getElementById(xx).appendChild(mybtn);
+                  
+                <?php }?>
+                  // var count = 0;
+                </script>
+                    <input type = "submit" name="sbtn" id ="sbtn" value = "Submit">                    
+                    </form>
+
+                  <!-- </div> -->
+</div>
 </body>
 </html>

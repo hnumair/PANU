@@ -3,6 +3,20 @@ session_start();
 if (!isset($_SESSION['uid'])) {
   header("location: login.php");
 }
+require 'conn.php';
+$uid = $_SESSION['uid'];
+$sid = $_GET['sid'];
+$query = "UPDATE slots SET vacant = 0 where sid = ?";
+$stmt = $conn->prepare($query);
+$stmt->bind_param("i",$sid);
+$stmt->execute();
+
+
+$query = "INSERT INTO allot VALUES(?, ?)";
+$stmt = $conn->prepare($query);
+$stmt->bind_param("ii",$uid,$sid);
+$stmt->execute();
+
 ?>
 
 <!DOCTYPE html>
@@ -36,7 +50,7 @@ if (!isset($_SESSION['uid'])) {
         <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
           <span class="ti-view-list"></span>
         </button>
-<!--         <ul class="navbar-nav mr-lg-2">
+        <!-- <ul class="navbar-nav mr-lg-2">
           <li class="nav-item nav-search d-none d-lg-block">
             <div class="input-group">
               <div class="input-group-prepend hover-cursor" id="navbar-search-icon">
@@ -170,7 +184,7 @@ if (!isset($_SESSION['uid'])) {
           <li class="nav-item">
             <a class="nav-link" href="index.php">
               <i class="ti-shield menu-icon"></i>
-              <span class="menu-title">Profile</span>
+              <span class="menu-title">Dashboard</span>
             </a>
           </li>
           <!-- <li class="nav-item">
@@ -241,9 +255,10 @@ if (!isset($_SESSION['uid'])) {
             <div class="col-md-12 grid-margin">
               <div class="d-flex justify-content-between align-items-center">
                 <div>
-                  <h4 class="font-weight-bold mb-0">Profile</h4>
+                  <h4 class="font-weight-bold mb-0">Settings</h4>
                 </div>
                 <div><br><br>
+
 <!--                     <button type="button" class="btn btn-primary btn-icon-text btn-rounded">
                       <i class="ti-clipboard btn-icon-prepend"></i>Report
                     </button> -->
@@ -251,7 +266,7 @@ if (!isset($_SESSION['uid'])) {
               </div>
             </div>
           </div>
-   <!--        <div class="row">
+          <!-- <div class="row">
             <div class="col-md-3 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body">
@@ -260,7 +275,7 @@ if (!isset($_SESSION['uid'])) {
                     <h3 class="mb-0 mb-md-2 mb-xl-0 order-md-1 order-xl-0">34040</h3>
                     <i class="ti-calendar icon-md text-muted mb-0 mb-md-3 mb-xl-0"></i>
                   </div>  
-    -->               <!-- <p class="mb-0 mt-2 text-danger">0.12% <span class="text-black ml-1"><small>(30 days)</small></span></p> -->
+           -->        <!-- <p class="mb-0 mt-2 text-danger">0.12% <span class="text-black ml-1"><small>(30 days)</small></span></p> -->
                 <!-- </div>
               </div>
             </div>
@@ -297,66 +312,13 @@ if (!isset($_SESSION['uid'])) {
                     <i class="ti-layers-alt icon-md text-muted mb-0 mb-md-3 mb-xl-0"></i>
                   </div>  
                  -->  <!-- <p class="mb-0 mt-2 text-success">23.00%<span class="text-black ml-1"><small>(30 days)</small></span></p> -->
-<!--                 </div>
+                <!-- </div>
               </div>
             </div>
           </div> -->
-           <div class="row">
-                        <div class="col-12 grid-margin stretch-card">
-              <div class="card">
-                <div class="card-body">
-                  <h4 class="card-title">User Details</h4>
-                  <!-- <p class="card-description">
-                    Basic form elements
-                  </p> -->
-                  <form class="forms-sample">
-                    <div class="form-group">
-                      <label for="exampleInputName1">Name</label>
-                      <input type="text" class="form-control" id="exampleInputName1" placeholder="Name">
-                    </div>
-                    <div class="form-group">
-                      <label for="exampleInputEmail3">Email address</label>
-                      <input type="email" class="form-control" id="exampleInputEmail3" placeholder="Email" disabled="true">
-                    </div>
-                    <div class="form-group">
-                      <label for="exampleInputPassword4">Password</label>
-                      <input type="password" class="form-control" id="exampleInputPassword4" placeholder="Password" disabled="true">
-                    </div>
-                    <div class="form-group">
-                      <label for="exampleInputPassword4">Phone No</label>
-                      <input type="text" class="form-control" id="phone" placeholder="Phone No" >
-                    </div>
-                    <!-- <div class="form-group">
-                      <label for="exampleSelectGender">Gender</label>
-                        <select class="form-control" id="exampleSelectGender">
-                          <option>Male</option>
-                          <option>Female</option>
-                        </select>
-                      </div> -->
-                    <!-- <div class="form-group">
-                      <label>File upload</label>
-                      <input type="file" name="img[]" class="file-upload-default">
-                      <div class="input-group col-xs-12">
-                        <input type="text" class="form-control file-upload-info" disabled placeholder="Upload Image">
-                        <span class="input-group-append">
-                          <button class="file-upload-browse btn btn-primary" type="button">Upload</button>
-                        </span>
-                      </div>
-                    </div> -->
-                    <!-- <div class="form-group">
-                      <label for="exampleInputCity1">City</label>
-                      <input type="text" class="form-control" id="exampleInputCity1" placeholder="Location">
-                    </div>
-                    <div class="form-group">
-                      <label for="exampleTextarea1">Textarea</label>
-                      <textarea class="form-control" id="exampleTextarea1" rows="4"></textarea>
-                    </div> -->
-                    <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                    <button class="btn btn-light">Cancel</button>
-                  </form>
-                </div>
-              </div>
-            </div>
+          <div class="row">
+                  <a href="chgpwd.php">
+                  <label class="form-check-flat">Change Password</label></a>
           <!--   <div class="col-md-6 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body">

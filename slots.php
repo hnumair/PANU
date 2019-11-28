@@ -1,3 +1,21 @@
+<?php
+session_start();
+if (!isset($_SESSION['uid'])) {
+  header("location: login.php");
+}
+require 'conn.php';
+
+$query = "select * from slots";
+$stmt = $conn->prepare($query);
+$stmt->execute();
+$stmt->store_result();
+$result = $stmt->num_rows;
+$stmt->bind_result($sid, $vacant);
+
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -6,8 +24,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>P.A.N.U</title>
-
-    <style type="text/css">
+<style type="text/css">
     :root{
       --color:#C06C84;
     }
@@ -16,7 +33,8 @@
   display: inline-flex;
   align-items: center;
   background: transparent;
-  border: 4px solid var(--color);
+  border: 4px solid;
+  /* border-color: #C06C84; */
   box-shadow: 0 3px 2px 0 rgba(0,0,0,0.1);
   border-radius: 5px;
   height: 45px;
@@ -41,7 +59,7 @@
     transform: translate3d(0, 1px, 0);
   }
 
-/*
+
 .pulse {
   position: relative;
   
@@ -63,7 +81,8 @@
   &:hover:before, &:hover:after {
     display: none;
   }
-}*/
+}
+
 
 body {
   /*display:flex;*/
@@ -72,27 +91,55 @@ body {
   background: #272822;
 }
 </style>
-  <script type="text/javascript">
-    var count = 1;
+ <script type="text/javascript">
+    var count = 0;
+    var butt2;
     function setColor(mybtn) {
-        var property = mybtn;
-        alert(mybtn);
-        if (count == 0) {
-            property.style.setProperty('--color','#C06C84');
-            property.style.backgroundColor = "#ffffff00";
-            count = 1;        
+        // var butt = document.getElementById('mybtn');
+        // alert(mybtn);
+        butt2 = mybtn;
+        var butt = document.getElementById(mybtn);
+        // alert(window.getComputedStyle(butt, null));
+
+        if (butt.style.color == "rgb(52, 73, 94)") {
+            
+            butt.style.color = "#C06C84";
+            butt.style.backgroundColor = "#ffffff00";
+            butt.style.borderColor = "#C06C84";
+            count--;        
         }
-        else {
-            mybtn.style.setProperty('--color','#34495e');
-            // property.style.borderColor = "#34495e";
-            mybtn.style.backgroundColor = "#34495e";
-            // property.style.boxShadow = "0px 0px 10px #34495e";
-            count = 0;
+        else if(butt.style.color == "rgb(192, 108, 132)"){
+        // alert(butt);  
+        // alert(butt.style.color);
+            count++;
+
+            butt.setAttribute("hidden", "true");
+            butt.style.color = "#34495e";
+            butt.style.borderColor = "#34495e";
+            butt.style.backgroundColor = "#34495e";
+            butt.style.boxShadow = "0px 0px 10px #34495e";
+
         }
-        return mybtn;
+        // alert(count);
+        if(count>1){
+          document.getElementById('sbtn').disabled = true;
+        }
+        else{
+          document.getElementById('sbtn').disabled = false;
+        }
+        document.getElementById('txt').innerHTML = butt2;
     }
 
+    // function sendid(){
+    //     // alert(butt2);
+    //     window.location.href = "login.php?id="+butt2;
+
+    // }
+
   </script>
+  <?php
+
+ ?>
 
   <!-- plugins:css -->
   <link rel="stylesheet" href="vendors/ti-icons/css/themify-icons.css">
@@ -117,114 +164,12 @@ body {
         <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
           <span class="ti-view-list"></span>
         </button>
-<!--         <ul class="navbar-nav mr-lg-2">
-          <li class="nav-item nav-search d-none d-lg-block">
-            <div class="input-group">
-              <div class="input-group-prepend hover-cursor" id="navbar-search-icon">
-                <span class="input-group-text" id="search">
-                  <i class="ti-search"></i>
-                </span>
-              </div>
-              <input type="text" class="form-control" id="navbar-search-input" placeholder="Search now" aria-label="search" aria-describedby="search">
-            </div>
-          </li>
-        </ul> -->
+
         <ul class="navbar-nav navbar-nav-right">
-          <!-- <li class="nav-item dropdown mr-1">
-            <a class="nav-link count-indicator dropdown-toggle d-flex justify-content-center align-items-center" id="messageDropdown" href="#" data-toggle="dropdown">
-              <i class="ti-email mx-0"></i>
-            </a>
-            <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="messageDropdown">
-              <p class="mb-0 font-weight-normal float-left dropdown-header">Messages</p>
-              <a class="dropdown-item">
-                <div class="item-thumbnail">
-                    <img src="images/faces/face4.jpg" alt="image" class="profile-pic">
-                </div>
-                <div class="item-content flex-grow">
-                  <h6 class="ellipsis font-weight-normal">David Grey
-                  </h6>
-                  <p class="font-weight-light small-text text-muted mb-0">
-                    The meeting is cancelled
-                  </p>
-                </div>
-              </a>
-              <a class="dropdown-item">
-                <div class="item-thumbnail">
-                    <img src="images/faces/face2.jpg" alt="image" class="profile-pic">
-                </div>
-                <div class="item-content flex-grow">
-                  <h6 class="ellipsis font-weight-normal">Tim Cook
-                  </h6>
-                  <p class="font-weight-light small-text text-muted mb-0">
-                    New product launch
-                  </p>
-                </div>
-              </a>
-              <a class="dropdown-item">
-                <div class="item-thumbnail">
-                    <img src="images/faces/face3.jpg" alt="image" class="profile-pic">
-                </div>
-                <div class="item-content flex-grow">
-                  <h6 class="ellipsis font-weight-normal"> Johnson
-                  </h6>
-                  <p class="font-weight-light small-text text-muted mb-0">
-                    Upcoming board meeting
-                  </p>
-                </div>
-              </a>
-            </div>
-          </li> -->
-<!--           <li class="nav-item dropdown">
-            <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-toggle="dropdown">
-              <i class="ti-bell mx-0"></i>
-              <span class="count"></span>
-            </a>
-            <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="notificationDropdown">
-              <p class="mb-0 font-weight-normal float-left dropdown-header">Notifications</p>
-              <a class="dropdown-item">
-                <div class="item-thumbnail">
-                  <div class="item-icon bg-success">
-                    <i class="ti-info-alt mx-0"></i>
-                  </div>
-                </div>
-                <div class="item-content">
-                  <h6 class="font-weight-normal">Application Error</h6>
-                  <p class="font-weight-light small-text mb-0 text-muted">
-                    Just now
-                  </p>
-                </div>
-              </a>
-              <a class="dropdown-item">
-                <div class="item-thumbnail">
-                  <div class="item-icon bg-warning">
-                    <i class="ti-settings mx-0"></i>
-                  </div>
-                </div>
-                <div class="item-content">
-                  <h6 class="font-weight-normal">Settings</h6>
-                  <p class="font-weight-light small-text mb-0 text-muted">
-                    Private message
-                  </p>
-                </div>
-              </a>
-              <a class="dropdown-item">
-                <div class="item-thumbnail">
-                  <div class="item-icon bg-info">
-                    <i class="ti-user mx-0"></i>
-                  </div>
-                </div>
-                <div class="item-content">
-                  <h6 class="font-weight-normal">New user registration</h6>
-                  <p class="font-weight-light small-text mb-0 text-muted">
-                    2 days ago
-                  </p>
-                </div>
-              </a>
-            </div>
-          </li>
- -->          <li class="nav-item nav-profile dropdown">
+          
+           <li class="nav-item nav-profile dropdown">
             <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
-              <img src="images/faces/face28.jpg" alt="profile"/>
+              <img src="images/17773.jpg" alt="profile"/>
             </a>
             <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
               <a class="dropdown-item" href="settings.php">
@@ -254,19 +199,7 @@ body {
               <span class="menu-title">Dashboard</span>
             </a>
           </li>
-          <!-- <li class="nav-item">
-            <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
-              <i class="ti-user menu-icon"></i>
-              <span class="menu-title">Profile</span>
-              <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="ui-basic">
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="pages/ui-features/buttons.html">Buttons</a></li>
-                <li class="nav-item"> <a class="nav-link" href="pages/ui-features/typography.html">Typography</a></li>
-              </ul>
-            </div>
-          </li> -->
+
           <li class="nav-item">
             <a class="nav-link" href="slots.php">
               <i class="ti-car menu-icon"></i>
@@ -285,34 +218,7 @@ body {
               <span class="menu-title">Settings</span>
             </a>
           </li>
-          <!-- <li class="nav-item">
-            <a class="nav-link" href="pages/icons/themify.html">
-              <i class="ti-star menu-icon"></i>
-              <span class="menu-title">Icons</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" data-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
-              <i class="ti-user menu-icon"></i>
-              <span class="menu-title">User Pages</span>
-              <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="auth">
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="pages/samples/login.html"> Login </a></li>
-                <li class="nav-item"> <a class="nav-link" href="pages/samples/login-2.html"> Login 2 </a></li>
-                <li class="nav-item"> <a class="nav-link" href="pages/samples/register.html"> Register </a></li>
-                <li class="nav-item"> <a class="nav-link" href="pages/samples/register-2.html"> Register 2 </a></li>
-                <li class="nav-item"> <a class="nav-link" href="pages/samples/lock-screen.html"> Lockscreen </a></li>
-              </ul>
-            </div>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="documentation/documentation.html">
-              <i class="ti-write menu-icon"></i>
-              <span class="menu-title">Documentation</span>
-            </a>
-          </li> -->
+
  </ul>
       </nav> 
 
@@ -336,25 +242,52 @@ body {
               <div class="card">
                 <div class="card-body">
 
-                  <div class="d-flex flex-wrap justify-content-between justify-content-md-center justify-content-xl-between align-items-center">
+                  <div  class="d-flex flex-wrap justify-content-between justify-content-md-center justify-content-xl-between align-items-center">
+                    <div id="targeto" name="targeto">
+                    <!-- <button id="mybtn" class="mybtn"></button> -->
+                    <!-- <button id="mybtn" class="mybtn"></button> -->
+                    <!-- <button id="mybtn" class="mybtn"></button> -->
+                    <!-- <button id="mybtn" class="mybtn"></button> -->
+                    <!-- <button id = "yy" class="mybtn" onclick="setColor()"></button> -->
+                    <form method="post" style="bottom: 0%;">
+                      <p id = "txt" name="butt" hiddden = "true"></p>
+                    <!-- <button id = "mybtn" class="btn" onclick="setColor()"></button> --> 
+                 <script type="text/javascript">
+                  var n = <?php echo $result; ?>;
+                  var tar = document.getElementById(mybtn);
+                  // alert(tar);
+                  <?php
+                    while($stmt->fetch()){
 
-                    <!-- <button id="mybtn" class="mybtn"></button> -->
-                    <!-- <button id="mybtn" class="mybtn"></button> -->
-                    <!-- <button id="mybtn" class="mybtn"></button> -->
-                    <!-- <button id="mybtn" class="mybtn"></button> -->
-                <script type="text/javascript">
-                  for (var i = 0; i < 5; i++) {
-                    
+
+                  ?>
+                    var vac = <?php echo $vacant; ?>;
+                    var i = <?php echo $sid; ?>;
+                    // document.writeln(i);
                     var mybtn = document.createElement("BUTTON");
-                    mybtn.setAttribute("id","mybtn"+i);
+                    mybtn.setAttribute("id","btn"+i);
+                    mybtn.setAttribute("name","btn"+i);
                     mybtn.setAttribute("class","mybtn");
-                    // <button id = "mybtn" class="mybtn" onclick="setColor()"></button>
-                    document.body.appendChild(mybtn);
-                  }
-                </script>
-                    <!-- <h3 class="mb-0 mb-md-2 mb-xl-0 order-md-1 order-xl-0">34040</h3> -->
-                    <!-- <i class="ti-calendar icon-md text-muted mb-0 mb-md-3 mb-xl-0"></i> -->
+                    mybtn.setAttribute("onclick","setColor(id)");
+                    if(vac == 1){
+                      mybtn.style.color = "#C06C84";
 
+                    }else{
+                      mybtn.style.color = "#34495e";
+                      mybtn.setAttribute("disabled","true");                      
+                    }
+                    // ("borderColor","red");
+                    document.getElementById('targeto').appendChild(mybtn);
+                  
+                <?php }?>
+                  // var count = 0;
+                </script>
+                    <input type = "submit" name="sbtn" id ="sbtn" value = "Submit" >                    
+                    </form>
+
+                                    <!-- <h3 class="mb-0 mb-md-2 mb-xl-0 order-md-1 order-xl-0">34040</h3> -->
+                    <!-- <i class="ti-calendar icon-md text-muted mb-0 mb-md-3 mb-xl-0"></i> -->
+                  </div>
                   </div>   
 
                 </div>
